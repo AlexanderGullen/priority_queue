@@ -34,10 +34,11 @@ def username_to_id(request):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def test_token(request):
-    return Response('successful',status=status.HTTP_200_OK)
+    return Response(request.user.username,status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def login(request):
+    print(request.data)
     #TODO: implement email based login
     user = User.objects.filter(username=request.data['username'] if 'username' in request.data else None).first()
 
@@ -87,7 +88,7 @@ def sign_up(request):
         user.set_password(user.password)
         user.save()
         token = Token.objects.create(user=user)
-        return Response({'token':token.key,'user':serializer.data['username']})
+        return Response({'token':token.key,'username':serializer.data['username']})
    
     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
@@ -112,7 +113,7 @@ def create(request):
         'deadline' : request.data['deadline'] if 'deadline' in request.data else None,
         'name'     : request.data['name'] if 'name' in request.data else None,
         'text'     : request.data['text'] if 'text' in request.data else None,
-        'priority' : request.data['priority'] if 'priority' in request.data else 0, #TODO: get the program to weigh priority autmatically
+        'priority' : request.data['priority'] if 'priority' in request.data else 0,
         })
 
     if serializer.is_valid():
@@ -191,17 +192,4 @@ def notify(request,pk):
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(status=status.HTTP_200_OK)
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -11,8 +11,8 @@ class Task(models.Model):
     deadline = models.DateField(null=True,help_text='Date when task should be completed')
     priority = models.IntegerField(help_text='High to Low numeric priority assigned to task')
 
-    name = models.CharField(max_length=50, help_text='Name given to the task')
-    text = models.TextField(help_text='Text description of task to be performed') 
+    name = models.CharField(blank=False,max_length=50, help_text='Name given to the task')
+    text = models.TextField(blank=True,help_text='Text description of task to be performed') 
     # charField stores a limited number of chars, TextField can store unlimited text,
     # in postgress there is "No performance difference among these types" 
     # https://www.postgresql.org/docs/9.0/datatype-character.html
