@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    #TODO: develop a coherent naming scheme for these views
     path('user_id',views.username_to_id),
     path('login',views.login),
     path('sign_up',views.sign_up),
@@ -9,5 +10,6 @@ urlpatterns = [
     path('task', views.read, name='Create new task'),
     path('task/create', views.create, name='Get all tasks'),
     path('task/<int:pk>', views.update, name='Update a task'),
+    path('task/<int:pk>/notify', views.notify, name='Notify assignee of a task'),
 ]
 

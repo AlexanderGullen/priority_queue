@@ -1,8 +1,9 @@
-from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password, ValidationError
 from django.db.models import Q
 
+from django.core.mail import send_mail
+from smtplib import SMTPException
 
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -161,6 +162,39 @@ def update(request,pk):
     if request.method == 'DELETE':
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['PUT'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def notify(request,pk):
+    try:
+        task = Task.objects.get(pk=pk)
+    except Task.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    #verify user has permissions to access the object they are accessing
+    if task.creator.id != request.user.id:
+        if task.assignee == None or task.assignee.id != request.user.id:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    if task.assignee is None:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    else:
+        try:
+            send_mail(
+                f"{task.creator.username} shared {task.name} with you.",
+                f"{task.text}",
+                f"alexmgullen@gmail.com",
+                [task.assignee.email],
+                fail_silently=False,
+                )
+        except SMTPException as e:
+            print(e)
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response(status=status.HTTP_200_OK)
+
+
 
 
 
