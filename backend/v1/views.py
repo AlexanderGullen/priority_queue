@@ -38,14 +38,13 @@ def test_token(request):
 
 @api_view(['POST'])
 def login(request):
-    user = User.objects.filter(username=request.data['username'] if 'username' in request.data else None)
+    #TODO: implement email based login
+    user = User.objects.filter(username=request.data['username'] if 'username' in request.data else None).first()
 
-    if not user.exists():
+    if user == None:
         return Response('incorrect username/password',status=status.HTTP_404_NOT_FOUND)
         # why "incorrect username/password" is still the more correct and useful statement:
         # https://news.ycombinator.com/item?id=8683062
-    
-    user = user[0]
 
     if not user.check_password(request.data['password'] if 'password' in request.data else None):
         return Response('incorrect username/password',status=status.HTTP_404_NOT_FOUND)
@@ -188,8 +187,7 @@ def notify(request,pk):
                 [task.assignee.email],
                 fail_silently=False,
                 )
-        except SMTPException as e:
-            print(e)
+        except SMTPException:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(status=status.HTTP_200_OK)
