@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password, ValidationError
-from django.shortcuts import get_object_or_404
+from django.db.models import Q
+
 
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -17,17 +18,26 @@ from coolname import generate_slug
 
 
 ##### USERS #####
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def username_to_id(request):
+    user = User.objects.filter(Q(username=request.data['username'] if 'username' in request.data else None)).first()
+
+    if user != None:
+        return Response({'username':user.username,'id':user.id},status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def test_token(request):
-    return Response("successful",status=status.HTTP_200_OK)
+    return Response('successful',status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def login(request):
-
-    user = User.objects.filter(username=request.data['username'])
+    user = User.objects.filter(username=request.data['username'] if 'username' in request.data else None)
 
     if not user.exists():
         return Response('incorrect username/password',status=status.HTTP_404_NOT_FOUND)
@@ -36,7 +46,7 @@ def login(request):
     
     user = user[0]
 
-    if not user.check_password(request.data['password']):
+    if not user.check_password(request.data['password'] if 'password' in request.data else None):
         return Response('incorrect username/password',status=status.HTTP_404_NOT_FOUND)
 
     token, created = Token.objects.get_or_create(user=user)
@@ -54,10 +64,10 @@ def sign_up(request):
 
     
     #ensure no two usernames are identical
-    #TODO: I've had a few instances of names veering on the inappropriate side, in this library it might be worth replaceing it with something more friendly.
     username = generate_slug(4)
     while User.objects.filter(username=username).exists():
         username = generate_slug(4)
+    #TODO: I've had a few instances of names veering on the inappropriate side, in this library it might be worth replaceing it with something more friendly.
 
     serializer = UserSerializer(data={
             'id': None,
@@ -84,13 +94,18 @@ def sign_up(request):
 
 ##### TASKS #####
 
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def read(request):
+    tasks = Task.objects.filter(Q(creator=request.user.id) | Q(assignee=request.user.id))
+    serializer = TaskSerializer(tasks,many=True)
+    return Response(serializer.data)
 
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def create(request):
-
-    if not request.user.is_authenticated:
-        return Response("Please sign in to access this service",status=status.HTTP_401_UNAUTHORIZED)
-
     serializer = TaskSerializer(data={
         'creator'  : request.user.id,
         'assignee' : None, # reduces function scope by forcing notification functionality to be a side effect of update.
@@ -105,18 +120,56 @@ def create(request):
         return Response(serializer.data,status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-def read(request):
-    pass
+@api_view(['GET','PUT','DELETE'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def update(request,pk):
+    try:
+        task = Task.objects.get(pk=pk)
+    except Task.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-def read(request,id):
-    pass
+    #verify user has permissions to access the object they are accessing
+    if task.creator.id != request.user.id:
+        if task.assignee == None or task.assignee.id != request.user.id:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-def update(request):
-    pass
+    if request.method == 'GET':
+        serializer = TaskSerializer(task)
+        return Response(serializer.data)
 
-def delete(request):
-    pass
+    if request.method == 'PUT':
+        serializer = TaskSerializer(task,data={
+            'id'       : task.id,
+            'creator'  : request.user.id,
+            'assignee' : request.data['assignee'] if 'assignee' in request.data else task.assignee,
+            'deadline' : request.data['deadline'] if 'deadline' in request.data else task.deadline,
+            'name'     : request.data['name'] if 'name' in request.data else task.name,
+            'text'     : request.data['text'] if 'text' in request.data else task.text,
+            'priority' : request.data['priority'] if 'priority' in request.data else task.priority,
+        })
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+    if request.method == 'DELETE':
+        task.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
+
+
+
+
