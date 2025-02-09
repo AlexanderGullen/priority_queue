@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['DB_SECRET_KEY']
+SECRET_KEY = 'django-insecure-y=9#0g=e29p*6y7cl3g9n+7vecw7^cw@2t5=@4pu6xs9y&8ko*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +52,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ]
+}
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'priority_queue.urls'
 
@@ -73,18 +83,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'priority_queue.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+#TODO: secure this account
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PASSWORD'],
-        'HOST': os.environ['DB_HOST'],
-        'PORT': os.environ['DB_PORT'],
+        'NAME': 'testing',
+        'USER': 'AGullen',
+        'PASSWORD': 'ApsbB8FT366XKkc',
+        'HOST': 'light-blue.postgres.database.azure.com',
+        'PORT': '5432',
+        'OPTIONS':{'sslmode':'require'},
     }
 }
 
@@ -129,3 +139,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST          = 'smtp.gmail.com'
+EMAIL_PORT          = 587
+EMAIL_HOST_USER     = 'alexmgullen@gmail.com'
+EMAIL_HOST_PASSWORD = 'lfsu zyyj ebwc dbxz'
+EMAIL_USE_TLS       = True
+EMAIL_USE_SSL       = False
