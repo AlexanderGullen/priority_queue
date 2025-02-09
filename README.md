@@ -6,21 +6,21 @@ This is a task management app that uses a priority queue to help you manage your
 
 To satisfy the requirements of the GSIC Systems Analyst - 224176 - Interview Assignement, this project will have to implement:
 
-    - [ ] Use case diagram
-    - [ ] CRUD operations on individual tasks
+    - [X] Use case diagram
+    - [X] CRUD operations on individual tasks
     - [ ] Dashboard displaying all tasks
     - [ ] Task search functionality
     - [ ] Notifications upon being assigned a task
-    - [ ] Persistent storage of tasks through a database system
-    - [ ] Authentication
+    - [X] Persistent storage of tasks through a database system
+    - [X] Authentication
         - User: Able to perform CRUD operations an tasks they created or that have been assigned to them.
         - Admin: Able to perform CRUD operations on tasks created by any user.
 
 ### Implementation Requirements
 
-    - [ ] Flask, Django or Express backend
+    - [X] Flask, Django or Express backend
     - [ ] React, Angular, Vue.js frontend
-    - [ ] PostgreSQL, MySQL or NoSQL database
+    - [X] PostgreSQL, MySQL or NoSQL database
 
 ## Use Cases
 
