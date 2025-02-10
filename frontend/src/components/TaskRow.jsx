@@ -22,18 +22,22 @@ export function TaskRow({task, deleteTask, updateTask, notify}){
 
     return (
         <tr key={task.id}>
-        <td><input ref={nameRef} defaultValue={task.name}/></td>
-        <td>{task.assignee === null ? <input ref={assigneeRef} defaultValue=''/> : <input ref={assigneeRef} defaultValue={task.assignee}/>  }</td>
-        <td><input ref={deadlineRef} defaultValue={task.deadline}/></td>
-        <td><input ref={priorityRef} defaultValue={task.priority}/></td>
-        <td><textarea ref={textRef} defaultValue={task.text}/></td>
-        <td>
-            <button onClick={() => deleteTask(task)}>Delete</button>
-            <button onClick={() => update(task)}>Update</button>
-            <button onClick={() => notify(task)}>Notify</button>
-            
-        </td>
-    </tr>
+    <td><input ref={nameRef} defaultValue={task.name} className="form-control" /></td>
+    <td>
+        {task.assignee === null ? 
+            <input ref={assigneeRef} defaultValue='' className="form-control" /> : 
+            <input ref={assigneeRef} defaultValue={task.assignee} className="form-control" />
+        }
+    </td>
+    <td><input ref={deadlineRef} defaultValue={task.deadline} className="form-control" /></td>
+    <td><input ref={priorityRef} defaultValue={task.priority} className="form-control" /></td>
+    <td><textarea ref={textRef} defaultValue={task.text} className="form-control" /></td>
+    <td>
+        <button onClick={() => deleteTask(task)} className="btn btn-danger me-2">Delete</button>
+        <button onClick={() => update(task)} className="btn btn-warning me-2">Update</button>
+        <button onClick={() => notify(task)} className="btn btn-info">Notify</button>
+    </td>
+</tr>
     )
 }
 

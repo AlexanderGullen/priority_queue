@@ -20,13 +20,46 @@ export function AddTask({createTask}){
     }
 
     return (
+        <div className="card p-4 shadow-sm mb-4">
+        <h3>Create Task</h3>
         <form onSubmit={create}>
-            <input type="text" ref={nameRef} placeholder="Task Name" maxLength={50} required />
-            <textarea ref={textRef} placeholder="Details"/>
-            <input ref={deadlineRef} type="datetime" placeholder="Task Deadline" />
-            <input ref={priorityRef} type="number" placeholder="Task Priority" defaultValue={0} />
-            <button type="submit">Create Task</button>
+            <div className="mb-3">
+                <input 
+                    type="text" 
+                    ref={nameRef} 
+                    placeholder="Task Name" 
+                    maxLength={50} 
+                    required 
+                    className="form-control" 
+                />
+            </div>
+            <div className="mb-3">
+                <textarea 
+                    ref={textRef} 
+                    placeholder="Details" 
+                    className="form-control" 
+                />
+            </div>
+            <div className="mb-3">
+                <input 
+                    ref={deadlineRef} 
+                    type="datetime-local" 
+                    placeholder="Task Deadline" 
+                    className="form-control" 
+                />
+            </div>
+            <div className="mb-3">
+                <input 
+                    ref={priorityRef} 
+                    type="number" 
+                    placeholder="Task Priority" 
+                    defaultValue={0} 
+                    className="form-control" 
+                />
+            </div>
+            <button type="submit" className="btn btn-success w-100">Create Task</button>
         </form>
+    </div>
     )
 }
 

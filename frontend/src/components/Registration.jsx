@@ -5,6 +5,9 @@ import toast, {Toaster} from 'react-hot-toast'
 
 import config from '../config'
 
+import "../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+import "../../node_modules/bootstrap/dist/js/bootstrap.min.js"
+
 export function Registration({validate_token}){
     const [login, setLogin] = useState({
 		username: '',
@@ -48,20 +51,57 @@ export function Registration({validate_token}){
 	}
 
     return ( 
-        <>
-        <h2>Login</h2>
-        <form onSubmit={handleLogIn}>
-            <input id="username" type="text" placeholder="Username" onChange={loginInput} required />
-            <input id="password" type="password" placeholder="Password" onChange={loginInput} required />
-              <button type="submit">Login</button>
-        </form>
-        <h2>Sign up</h2>
-        <form onSubmit={handleSignUp}>
-            <input id="email" type="text" placeholder="Username" onChange={signupInput} required />
-            <input id="password" type="password" placeholder="Password" onChange={signupInput} required />
-            <button type="submit">Login</button>
-        </form>
-        </>
+<>
+    <h2 className="text-center mb-4">Login</h2>
+    <form onSubmit={handleLogIn} className="mb-4">
+        <div className="mb-3">
+            <input 
+                id="username" 
+                type="text" 
+                placeholder="Username" 
+                onChange={loginInput} 
+                required 
+                className="form-control" 
+            />
+        </div>
+        <div className="mb-3">
+            <input 
+                id="password" 
+                type="password" 
+                placeholder="Password" 
+                onChange={loginInput} 
+                required 
+                className="form-control" 
+            />
+        </div>
+        <button type="submit" className="btn btn-primary w-100">Login</button>
+    </form>
+
+    <h2 className="text-center mb-4">Sign up</h2>
+    <form onSubmit={handleSignUp}>
+        <div className="mb-3">
+            <input 
+                id="email" 
+                type="text" 
+                placeholder="Email" 
+                onChange={signupInput} 
+                required 
+                className="form-control" 
+            />
+        </div>
+        <div className="mb-3">
+            <input 
+                id="password" 
+                type="password" 
+                placeholder="Password" 
+                onChange={signupInput} 
+                required 
+                className="form-control" 
+            />
+        </div>
+        <button type="submit" className="btn btn-success w-100">Sign Up</button>
+    </form>
+</>
     )
 
 }

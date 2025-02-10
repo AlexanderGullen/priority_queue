@@ -37,6 +37,7 @@ export function Tasks({token}){
             headers: { 'Authorization': 'Token ' + token }
         })
         .then((response) => {
+
             setTasks(response.data)
         })
         .catch((error) => {
@@ -113,27 +114,37 @@ export function Tasks({token}){
 
     return (
         <>
-        <h2>Tasks</h2>
-        <AddTask createTask={createTask}/>
+    <h2 className="text-center mb-4">Tasks</h2>
+    
+    <div className="mb-4">
+        <AddTask createTask={createTask} />
+    </div>
+    
+    <div className="mb-4">
         <SearchBar tasks={tasks} setSearchResults={setSearchResults} />
-        <table>
-            <thead>
+    </div>
+
+    <h3>View Tasks</h3>
+    <div className="table-responsive">
+        <table className="table table-striped table-bordered">
+            <thead className="table-light">
                 <tr>
-                    <td>Name</td>
-                    <td>Assignee</td>
-                    <td>Deadline</td>
-                    <td>Priority</td>
-                    <td>Details</td>
-                    <td></td>
+                    <th>Name</th>
+                    <th>Assignee</th>
+                    <th>Deadline</th>
+                    <th>Priority</th>
+                    <th>Details</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {searchResults.map((t) =>
-                    <TaskRow task={t} updateTask={updateTask} deleteTask={deleteTask} notify={notify}/>
-                )}
+                {searchResults.map((t) => (
+                    <TaskRow task={t} updateTask={updateTask} deleteTask={deleteTask} notify={notify} />
+                ))}
             </tbody>
         </table>
-        </>
+    </div>
+</>
     )
 }
 

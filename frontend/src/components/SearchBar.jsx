@@ -24,19 +24,20 @@ export function SearchBar({tasks,setSearchResults}){
 
     return (
         <header>
-            <form onSubmit={handleSubmit}>
-                <input
-                type='text'
-                ref={inputRef}
-                onChange={(e) => {
-                    handleSearchChange(e)
-                    inputRef.current.focus()
-                }}
-                />
-                <button>Search</button>
-
-            </form>
-        </header>
+    <form onSubmit={handleSubmit} className="d-flex justify-content-center align-items-center mb-4">
+        <input
+            type="text"
+            ref={inputRef}
+            onChange={(e) => {
+                handleSearchChange(e)
+                inputRef.current.focus()
+            }}
+            className="form-control me-2"
+            placeholder="Search tasks..."
+        />
+        <button type="submit" className="btn btn-primary">Search</button>
+    </form>
+</header>
 
     )
 
