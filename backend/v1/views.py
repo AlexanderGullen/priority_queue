@@ -30,6 +30,17 @@ def username_to_id(request):
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def id_to_username(request):
+    user = User.objects.filter(Q(id=request.data['id'] if 'id' in request.data else None)).first()
+
+    if user != None:
+        return Response({'username':user.username,'id':user.id},status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])

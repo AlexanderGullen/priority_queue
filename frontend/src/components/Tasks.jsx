@@ -28,8 +28,6 @@ export function Tasks({token}){
             readTasks()
         })
         .catch((error) => {
-            console.log(task.deadline)
-            console.log(error)
             toast.error("Create Error: " + error.response.data)
         })
     }

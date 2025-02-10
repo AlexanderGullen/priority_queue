@@ -8,7 +8,7 @@ class Task(models.Model):
     creator = models.ForeignKey(User,on_delete=models.CASCADE,related_name='creator')
     assignee = models.ForeignKey(User,null=True,on_delete=models.SET_NULL,related_name='assignee')
 
-    deadline = models.DateField(null=True,help_text='Date when task should be completed')
+    deadline = models.DateTimeField(null=True,help_text='Date when task should be completed')
     priority = models.IntegerField(help_text='High to Low numeric priority assigned to task')
 
     name = models.CharField(blank=False,max_length=50, help_text='Name given to the task')
