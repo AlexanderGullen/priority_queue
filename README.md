@@ -9,12 +9,14 @@ To satisfy the requirements of the GSIC Systems Analyst - 224176 - Interview Ass
     - [X] Use case diagram
     - [X] CRUD operations on individual tasks
     - [X] Dashboard displaying all tasks
-    - [ ] Task search functionality
+    - [X] Task search functionality
     - [ ] Notifications upon being assigned a task
     - [X] Persistent storage of tasks through a database system
     - [X] Authentication
         - User: Able to perform CRUD operations an tasks they created or that have been assigned to them.
         - Admin: Able to perform CRUD operations on tasks created by any user.
+    - [X] Documentation
+    
 
 ### Implementation Requirements
 
@@ -76,9 +78,9 @@ graph LR;
 ## Installation
 For the sake of simplicity I have preconfigured django with the credentials to use a cloud hosted PostgreSQL database. This will allow you to deploy the app without having to run a local instance of PostgreSQL, if you encounter any issues relating to database connection while deploying the app please reachout at [developer@alexmgullen.ca](mailto:developer@alexmgullen.ca) so I can troubleshoot the connection. I also hardcoded the database credentials to simplify code shareing. I'm well aware this isn't the way code should be shared.
 
-1. Have Python and Node installed on your computer
+1. Have Git, Python and Node installed on your computer
 2. Open two instances of windows CMD.
-3. In one of the repos clone this repo using `` command.
+3. In one of the repos clone this repo using `git clone https://github.com/AlexanderGullen/priority_queue` command.
 4. Move both instances of the windows CMD into the 'priority_queue' folder using the `cd priority_queue`.
 
 > NOTE: The first CMD, henceforth reffered to as the 'python terminal', will be used to run the backend, the second will be used to run Node and will be referred to as the 'node terminal'
