@@ -8,7 +8,7 @@ To satisfy the requirements of the GSIC Systems Analyst - 224176 - Interview Ass
 
     - [X] Use case diagram
     - [X] CRUD operations on individual tasks
-    - [ ] Dashboard displaying all tasks
+    - [X] Dashboard displaying all tasks
     - [ ] Task search functionality
     - [ ] Notifications upon being assigned a task
     - [X] Persistent storage of tasks through a database system
@@ -19,7 +19,7 @@ To satisfy the requirements of the GSIC Systems Analyst - 224176 - Interview Ass
 ### Implementation Requirements
 
     - [X] Flask, Django or Express backend
-    - [ ] React, Angular, Vue.js frontend
+    - [X] React, Angular, Vue.js frontend
     - [X] PostgreSQL, MySQL or NoSQL database
 
 ## Use Cases
@@ -73,6 +73,23 @@ graph LR;
     2-->B;
 ```
 
-## Accounts
+## Installation
+For the sake of simplicity I have preconfigured django with the credentials to use a cloud hosted PostgreSQL database. This will allow you to deploy the app without having to run a local instance of PostgreSQL, if you encounter any issues relating to database connection while deploying the app please reachout at [developer@alexmgullen.ca](mailto:developer@alexmgullen.ca) so I can troubleshoot the connection. I also hardcoded the database credentials to simplify code shareing. I'm well aware this isn't the way code should be shared.
 
-To prevent a exposing all the users of the platform to random assignment of tasks, any user who wants to assign a task will need to know a unique identifier for each user. I can use `https://github.com/alexanderlukanin13/coolname` for this.
+1. Have Python and Node installed on your computer
+2. Open two instances of windows CMD.
+3. In one of the repos clone this repo using `` command.
+4. Move both instances of the windows CMD into the 'priority_queue' folder using the `cd priority_queue`.
+
+> NOTE: The first CMD, henceforth reffered to as the 'python terminal', will be used to run the backend, the second will be used to run Node and will be referred to as the 'node terminal'
+
+5. (Optional) In the 'python terminal', create a python virtual environment with the command `python -m venv .\venv`.
+6. (Optional) In the 'python terminal', start the virtual environment using the command `.\venv\Scripts\Activate`.
+7. In the 'python terminal', install the python required packages by running `pip install -r requirements.txt`.
+8. In the 'python terminal', run the backend using the command `python backend\manage.py runserver`. This will start the Django backend.
+
+9. In the 'node terminal', move into the frontend folder using `cd frontend` command.
+10. In the 'node terminal', install the node requirements by running `npm install requirements`.
+11. In the 'node terminal', run the frontend using the command `npm run dev`.
+
+Now you will have both the backend and frontend runing on your computer, you should be able to open [http://localhost:5173/](http://localhost:5173/) in a web browser and see the app. Any support questions can be directed to [developer@alexmgullen.ca](mailto:developer@alexmgullen.ca).

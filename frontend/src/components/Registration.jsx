@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import axios from 'axios'
 
+import toast, {Toaster} from 'react-hot-toast'
+
 import config from '../config'
 
 export function Registration({validate_token}){
@@ -13,11 +15,6 @@ export function Registration({validate_token}){
 		email: '',
 		password: ''
 	})
-
-    const [banner, setBanner] = useState({
-        visible: false,
-        message: ''
-    })
 
 	const loginInput = (event) => {
 		setLogin({...login, [event.target.id]: event.target.value})
@@ -32,16 +29,9 @@ export function Registration({validate_token}){
 		axios.post(config.backend + 'login', login)
 		.then((response) => {
 			validate_token(response.data.token)
-            setBanner({
-                visible: false,
-                message: ''
-            })
 		})
 		.catch((error) => {
-            setBanner({
-                visible: true,
-                message: error.response.data
-            })
+            toast.error("Faild to sign up: " + error.response.data)
 		})
 	}
 
@@ -51,23 +41,15 @@ export function Registration({validate_token}){
 		axios.post(config.backend + 'sign_up', signup)
 		.then((response) => {
 			validate_token(response.data.token)
-            setBanner({
-                visible: false,
-                message: ''
-            })
 		})
 		.catch((error) => {
-            setBanner({
-                visible: true,
-                message: error.response.data
-            })
+            toast.error("Faild to sign up: " + error.response.data)
 		})
 	}
 
     return ( 
         <>
         <h2>Login</h2>
-        {banner.visible === true ? <h3>{banner.message}</h3> : null}
         <form onSubmit={handleLogIn}>
             <input id="username" type="text" placeholder="Username" onChange={loginInput} required />
             <input id="password" type="password" placeholder="Password" onChange={loginInput} required />

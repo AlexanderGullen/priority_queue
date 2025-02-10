@@ -1,4 +1,12 @@
+
+# django & python
 /venv
 __pycache__/
 *.log
 *.pot
+
+# react & js
+node_modules
+logs
+npm-debug.log*
+build/Release

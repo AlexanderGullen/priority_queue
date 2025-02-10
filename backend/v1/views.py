@@ -38,7 +38,6 @@ def test_token(request):
 
 @api_view(['POST'])
 def login(request):
-    print(request.data)
     #TODO: implement email based login
     user = User.objects.filter(username=request.data['username'] if 'username' in request.data else None).first()
 

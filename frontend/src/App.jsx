@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
+import toast, {Toaster} from 'react-hot-toast'
+
 import './App.css'
 import config from './config'
 
@@ -21,10 +23,10 @@ function App() {
 		})
 		.then((response) => {
 			setToken(token)
-			console.log(response)
 			setUsername(response.data)
 		})
 		.catch((error) => {
+			toast.error("Automatically Signed out: " + error.response.data)
 			setToken('')
 			setUsername('')
 		})
@@ -36,6 +38,7 @@ function App() {
 		{token.length > 0 ? <p> Hello {username} </p> : <p>Welcome! once you register you'll be given a fun name that you can use to trade tasks with other users. Make sure you save this name!</p>}
 		{token.length > 0 ? <Tasks token={token} /> : <Registration validate_token={validate_token}/>}
 		{token.length > 0 ? <button onClick={logout}>Log Out</button> : null}
+		<Toaster/>
     		</>
   	)
 }

@@ -1,145 +1,121 @@
-import { useState, useEffect, useCallback} from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
+import toast, {Toaster} from 'react-hot-toast'
 
 import config from '../config'
 
+import AddTask from './AddTask'
+import TaskRow from './TaskRow'
+import SearchBar from './SearchBar'
 
 export function Tasks({token}){
-    const [banner, setBanner] = useState({
-        visible: false,
-        message: ''
-    })
 
     const [tasks,setTasks] = useState([])
-
-    const [newTask, setNewTask] = useState({
-        name: '',
-        text: '',
-        deadline: null,
-        priority: 0
-    })
-
-    const [requery, setRequery] = useState(0)
-
-
-    const createTaskInput = (event) => {
-        console.log(event)
-        console.log(tasks)
-        setNewTask({...newTask, [event.target.id]: event.target.value})
-    }
-
-    function createTask(event){
-        event.preventDefault()
-        axios.post(config.backend + 'task/create', {
-            name: newTask.name,
-            text: newTask.text,
-            deadline: newTask.deadline,
-            priority: newTask.priority
-        }, { headers: { 'Authorization': 'Token ' + token }})
-        .then((response) => {
-            console.log(response)
-            setBanner({
-                visible: false,
-                message: ''
-            })
-            setRequery(!requery)
-        })
-        .catch((error) => {
-            console.log(error)
-            setBanner({
-                visible: true,
-                message: error.response.data
-            })
-        })
-    }
+    const [searchResults, setSearchResults] = useState([])
 
     useEffect(()=>{
-        console.log("R is for read")
-        axios.get(config.backend + 'task',{
+        readTasks()
+    },[])
+
+    const createTask = async (task) => {
+        axios.post(config.backend + 'task/create', {
+            name: task.name,
+            text: task.text,
+            deadline: task.deadline,
+            priority: task.priority
+        }, { headers: { 'Authorization': 'Token ' + token }})
+        .then((response) => {
+            readTasks()
+        })
+        .catch((error) => {
+            toast.error("Create Error: " + error.response.data)
+        })
+    }
+
+    const readTasks = () => {
+        const response = axios.get(config.backend + 'task',{
             headers: { 'Authorization': 'Token ' + token }
         })
         .then((response) => {
-            console.log(response.data)
             setTasks(response.data)
         })
         .catch((error) => {
-            setBanner({
-                visible: false,
-                message: error.response.data
-            })
+            toast.error("Read Error: " + error.response.data)
+            setTasks([])
         })
-    },[requery])
+    }
 
-    const updateTask = (t) => {
-        axios.put(config.backend + 'task/' + t.id,{},{ headers: {'Authorization': 'Token ' + token }})
+    const updateTask = (task) => {
+
+        axios.post(config.backend + 'user_id', { username: task.assignee }, { headers: { 'Authorization': 'Token ' + token }})
         .then((response) => {
-            console.log(response)
-            setBanner({
-                visible: false,
-                message: ''
-            })
-            setRequery(!requery)
+            task.assignee = response.data.id
         })
         .catch((error) => {
-            console.log(error)
-            setBanner({
-                visible: true,
-                message: error.response.data
+            //an error here is part of anticipated function of this program if the system is unable to 
+            // find the given assignee
+        })
+        .finally(() => {
+
+            const update = axios.put(config.backend + 'task/' + task.id,task,{ headers: {'Authorization': 'Token ' + token }})
+
+            toast.promise(update, {
+                loading: 'Updating',
+                success: 'Update Successful!'
+            })
+
+            update
+            .then((response) => {
+                readTasks()
+            })
+            .catch((error) => {
+                toast.error("Update Error: " + error.response.data)
+                readTasks()
             })
         })
     }
 
-    const deleteTask = (t) => {
-        console.log(t)
-        axios.delete(config.backend + 'task/' + t.id, { 
-            headers: {'Authorization': 'Token ' + token },
-            name: t.name,
-            text: t.text,
-            deadline: t.deadline,
-            priority: t.priority
+    const deleteTask = (task) => {
+        const deletePromise = axios.delete(config.backend + 'task/' + task.id, { headers: {'Authorization': 'Token ' + token }})
+
+        toast.promise(deletePromise, {
+            loading: 'Deleting',
+            success: 'Deletion Successful!'
         })
+
+        deletePromise
         .then((response) => {
-            console.log(response)
-            setBanner({
-                visible: false,
-                message: ''
-            })
-            setRequery(!requery)
+            readTasks()
         })
         .catch((error) => {
-            console.log(error)
-            setBanner({
-                visible: true,
-                message: error.response.data
-            })
+            toast.error("Delete Error: " + error.response.data)
+            readTasks()
         })
     }
 
+    const notify = (task) => {
+        const notification = axios.put(config.backend + 'task/' + task.id + '/notify',{},{ headers: {'Authorization': 'Token ' + token }})
 
-    function TasksRow({task}){
+        toast.promise(notification, {
+            loading: 'Sending Mail...',
+            success: 'Notification Sent!'
+        })
 
-        return (
-            <tr>
-            <td><input value={task.name} onChange={() => updateTask(task)}></input></td>
-            <td>{task.assignee === null ? <button/> : task.assignee}</td>
-            <td>{task.deadline}</td>
-            <td>{task.priority}</td>
-            <td>{task.text}</td>
-            <td><button onClick={() => deleteTask(task)}>Delete</button></td>
-        </tr>
-        )
+        notification
+        .then((response) => {
+            readTasks()
+        })
+        .catch((error) => {
+            toast.error("Notification Error: " + error.response.data)
+            readTasks()
+        })
     }
 
     return (
         <>
         <h2>Tasks</h2>
-        <form onSubmit={createTask}>
-            <input id="name" type="text" placeholder="Task Name" maxLength={50} onChange={createTaskInput} required />
-            <textarea id="text" type="" placeholder="Details" onChange={createTaskInput} />
-            <input id="deadline" type="datetime" placeholder="Task Deadline" onChange={createTaskInput} />
-            <input id="priority" type="number" placeholder="Task Priority" onChange={createTaskInput} />
-            <button type="submit">Create Task</button>
-        </form>
+        <AddTask createTask={createTask}/>
+        <SearchBar tasks={tasks} setSearchResults={setSearchResults} />
         <table>
             <thead>
                 <tr>
@@ -152,15 +128,13 @@ export function Tasks({token}){
                 </tr>
             </thead>
             <tbody>
-                {tasks.map((t) =>
-                    <TasksRow task={t}/>
+                {searchResults.map((t) =>
+                    <TaskRow task={t} updateTask={updateTask} deleteTask={deleteTask} notify={notify}/>
                 )}
             </tbody>
         </table>
         </>
     )
-
-
 }
 
 export default Tasks
