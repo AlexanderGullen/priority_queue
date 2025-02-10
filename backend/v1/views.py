@@ -52,6 +52,12 @@ def login(request):
     #TODO: implement email based login
     user = User.objects.filter(username=request.data['username'] if 'username' in request.data else None).first()
 
+    #if username doesn't work check email
+    if user == None:
+        print(f"Trying email : {user}")
+        user = User.objects.filter(email=request.data['email'] if 'email' in request.data else None).first()
+
+
     if user == None:
         return Response('incorrect username/password',status=status.HTTP_404_NOT_FOUND)
         # why "incorrect username/password" is still the more correct and useful statement:

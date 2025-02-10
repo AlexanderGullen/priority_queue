@@ -11,7 +11,8 @@ import "../../node_modules/bootstrap/dist/js/bootstrap.min.js"
 export function Registration({validate_token}){
     const [login, setLogin] = useState({
 		username: '',
-		password: ''
+		password: '',
+        email: ''
 	})
 
 	const [signup, setSignup] = useState({
@@ -29,12 +30,13 @@ export function Registration({validate_token}){
 
     function handleLogIn(event) {
 		event.preventDefault()
+        console.log(login)
 		axios.post(config.backend + 'login', login)
 		.then((response) => {
 			validate_token(response.data.token)
 		})
 		.catch((error) => {
-            toast.error("Faild to sign up: " + error.response.data)
+            toast.error("Failed to sign up: " + error.response.data)
 		})
 	}
 
@@ -54,28 +56,39 @@ export function Registration({validate_token}){
 <>
     <h2 className="text-center mb-4">Login</h2>
     <form onSubmit={handleLogIn} className="mb-4">
-        <div className="mb-3">
-            <input 
-                id="username" 
-                type="text" 
-                placeholder="Username" 
-                onChange={loginInput} 
-                required 
-                className="form-control" 
-            />
-        </div>
-        <div className="mb-3">
-            <input 
-                id="password" 
-                type="password" 
-                placeholder="Password" 
-                onChange={loginInput} 
-                required 
-                className="form-control" 
-            />
-        </div>
-        <button type="submit" className="btn btn-primary w-100">Login</button>
-    </form>
+  <div className="mb-3">
+    <div className="d-flex align-items-center">
+      <input 
+        id="email" 
+        type="text" 
+        placeholder="Email" 
+        onChange={loginInput} 
+        className="form-control me-2" 
+      />
+      <span className="mx-2">or</span>
+      <input 
+        id="username" 
+        type="text" 
+        placeholder="Username" 
+        onChange={loginInput} 
+        className="form-control ms-2" 
+      />
+    </div>
+  </div>
+  
+  <div className="mb-3">
+    <input 
+      id="password" 
+      type="password" 
+      placeholder="Password" 
+      onChange={loginInput} 
+      required 
+      className="form-control" 
+    />
+  </div>
+  
+  <button type="submit" className="btn btn-primary w-100">Login</button>
+</form>
 
     <h2 className="text-center mb-4">Sign up</h2>
     <form onSubmit={handleSignUp}>
@@ -84,8 +97,8 @@ export function Registration({validate_token}){
                 id="email" 
                 type="text" 
                 placeholder="Email" 
+                required
                 onChange={signupInput} 
-                required 
                 className="form-control" 
             />
         </div>
@@ -93,9 +106,9 @@ export function Registration({validate_token}){
             <input 
                 id="password" 
                 type="password" 
-                placeholder="Password" 
+                placeholder="Password"
+                required
                 onChange={signupInput} 
-                required 
                 className="form-control" 
             />
         </div>
