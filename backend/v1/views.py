@@ -187,6 +187,8 @@ def notify(request,pk):
         if task.assignee == None or task.assignee.id != request.user.id:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+    print(task)
+
     if task.assignee is None:
         return Response(status=status.HTTP_404_NOT_FOUND)
     else:
@@ -198,6 +200,8 @@ def notify(request,pk):
                 [task.assignee.email],
                 fail_silently=False,
                 )
+
+            print(task.assignee.email)
         except SMTPException:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
