@@ -9,11 +9,15 @@ export function AddTask({createTask}){
 
     const create = (e) => {
         e.preventDefault()
+
         const task = {
             name: nameRef.current.value,
             text: textRef.current.value,
-            deadline: null, //TODO: implement datepicker
             priority: priorityRef.current.value
+        }
+
+        if(deadlineRef.current.value){
+            task.deadline = deadlineRef.current.value
         }
 
         createTask(task)
