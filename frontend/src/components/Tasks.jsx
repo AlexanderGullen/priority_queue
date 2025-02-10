@@ -139,7 +139,7 @@ export function Tasks({token}){
             </thead>
             <tbody>
                 {searchResults.map((t) => (
-                    <TaskRow task={t} updateTask={updateTask} deleteTask={deleteTask} notify={notify} />
+                    <TaskRow key={t.id} task={t} updateTask={updateTask} deleteTask={deleteTask} notify={notify} />
                 ))}
             </tbody>
         </table>
