@@ -1,0 +1,14 @@
+[Unit]
+Description=uWSGI service for Django
+After=network.target
+
+[Service]
+User=django_user
+Group=www-data
+WorkingDirectory=/home/django_user/priority_queue/backend
+ExecStart=/home/django_user/priority_queue/venv/bin/uwsgi --ini /home/django_user/priority_queue/backend/uwsgi.ini
+PIDFile=/home/django_user/app.pid
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
