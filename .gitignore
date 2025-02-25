@@ -1,0 +1,14 @@
+private
+
+# django & python
+/venv
+__pycache__/
+*.log
+*.pot
+.env
+
+# react & js
+node_modules
+logs
+npm-debug.log*
+build/Release
