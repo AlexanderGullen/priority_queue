@@ -6,4 +6,4 @@ djangorestframework==3.15.2
 psycopg==3.2.4
 sqlparse==0.5.3
 tzdata==2025.1
-uwsgi=2.0.28
+uwsgi==2.0.28
