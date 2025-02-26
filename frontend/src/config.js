@@ -1,4 +1,4 @@
 export const config = {
-    backend: 'http://localhost:8000/v1/'
+    backend: 'https://priorityqueue.ca'
 }
 export default config

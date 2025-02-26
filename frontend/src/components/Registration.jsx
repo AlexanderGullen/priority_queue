@@ -35,6 +35,7 @@ export function Registration({validate_token}){
 			validate_token(response.data.token)
 		})
 		.catch((error) => {
+
             toast.error("Failed to sign up: " + error.response.data)
 		})
 	}
@@ -47,7 +48,7 @@ export function Registration({validate_token}){
 			validate_token(response.data.token)
 		})
 		.catch((error) => {
-            toast.error("Faild to sign up: " + error.response.data)
+            toast.error("Failed to sign up: " + error.response.data)
 		})
 	}
 
