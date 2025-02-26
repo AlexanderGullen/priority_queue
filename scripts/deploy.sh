@@ -4,10 +4,9 @@ mkdir -p site
 cp ./scripts/uwsgi.service /etc/systemd/system/uwsgi.service
 cp ./scripts/priority_queue.conf /etc/nginx/conf.d/priority_queue.conf
 
+python -m venv ./venv
+source ./venv/bin/activate
 
 
-
-
-
-systemctl start uwsgi
-systemctl start nginx
+systemctl restart uwsgi
+systemctl restart nginx
