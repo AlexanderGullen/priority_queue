@@ -6,6 +6,11 @@ cp ./scripts/priority_queue.conf /etc/nginx/conf.d/priority_queue.conf
 
 python -m venv ./venv
 source ./venv/bin/activate
+pip install -r requirements.txt
+
+cp ./scripts/uwsgi.ini backend
+
+systemctl daemon-reload
 
 
 systemctl restart uwsgi
